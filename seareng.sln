@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34009.444
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "seareng", "seareng.csproj", "{DA434A1F-537C-4312-A7E9-B536A9BD7A7F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "seareng", "seareng.Web\seareng.csproj", "{DA434A1F-537C-4312-A7E9-B536A9BD7A7F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "seareng.Core", "seareng.Core\seareng.Core.csproj", "{E5192608-BB88-4756-BABF-8209FAA7F6DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "seareng.Playground", "seareng.Playground\seareng.Playground.csproj", "{35D122FC-9EC4-4D9F-B7B0-11CF77B54E16}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{DA434A1F-537C-4312-A7E9-B536A9BD7A7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA434A1F-537C-4312-A7E9-B536A9BD7A7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA434A1F-537C-4312-A7E9-B536A9BD7A7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5192608-BB88-4756-BABF-8209FAA7F6DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5192608-BB88-4756-BABF-8209FAA7F6DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5192608-BB88-4756-BABF-8209FAA7F6DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5192608-BB88-4756-BABF-8209FAA7F6DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35D122FC-9EC4-4D9F-B7B0-11CF77B54E16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35D122FC-9EC4-4D9F-B7B0-11CF77B54E16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35D122FC-9EC4-4D9F-B7B0-11CF77B54E16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35D122FC-9EC4-4D9F-B7B0-11CF77B54E16}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
