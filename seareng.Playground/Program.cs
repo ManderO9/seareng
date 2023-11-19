@@ -6,6 +6,9 @@ var folderPath = "C:\\Users\\nnnn\\Desktop\\aspnetcore\\src\\";
 await se.IndexFolder(folderPath);
 
 
+se.SearchQuery("hello world");
+
+
 //var exes = (await se.GetFilesInDirectory(folderPath)).Select(x => Path.GetExtension(x)).Distinct();
 //foreach(var ex in exes)
 //{

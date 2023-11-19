@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 
 namespace seareng.Core;
 
@@ -6,22 +7,53 @@ public class SearchEngine
 {
     public List<string> SearchQuery(string query)
     {
-        // Get query terms
+        // TODO: move this somewhere else
+        // Read the index file
+        var fileContent = File.ReadAllText("./data-index.json");
 
-        // Tokenize the query
+        // Create the index object from the read file
+        var index = JsonSerializer.Deserialize<IndexData>(fileContent)!;
+
+        // Get query terms
+        var terms = Tokenize(query);
+
+        // If there was no terms to search
+        if(terms == null)
+            // Return an empty list
+            return new();
+
+        // The list that will contain the id of the files to return as well as it's weight
+        var filesResult = new Dictionary<int, double>();
 
         // For each term
+        foreach(var term in terms)
+        {
+            // Get the term's entry in the index
+            var indexEntry = index.Terms.FirstOrDefault(x => x.Term == term.Key);
 
-            // For each file
+            // If the term does not exist in the index
+            if(indexEntry is null)
+                // Skip it
+                continue;
+
+            // For each file that the term occurs in
+            foreach(var file in indexEntry.FileOccurrences)
+            {
+                // Calculate a weight for this file
+                var addedWeight = (double)file.Occurrences / indexEntry.FilesCount;
                 
-                // Get an associated weight
-
-            // Sum the weights of all terms for this file
-
+                // Add it to the list of weights and file ids
+                filesResult[file.FileId] = filesResult.GetValueOrDefault(file.FileId) + addedWeight;
+            }
+        }
 
         // Order the files by their weight
+        var result = filesResult.Select(x =>
+            new { path = index.Files.First(y => y.FileId == x.Key).Path, weight = x.Value })
+            .OrderByDescending(x => x.weight);
 
-        return new();
+        // Return the result
+        return result.Select(x => x.path).ToList();
     }
 
     /*    
@@ -42,7 +74,7 @@ public class SearchEngine
     public async Task IndexFolder(string folderPath)
     {
         // Get the files in the directory we want to index
-        var files = (await GetFilesInDirectory(folderPath)).Take(5000);
+        var files = (await GetFilesInDirectory(folderPath)).Take(500);
 
         // Create text extractor class
         var textExtractor = new TextExtractor();
@@ -151,7 +183,7 @@ public class SearchEngine
 
                 // Increment the files count
                 termEntry.FilesCount += 1;
-                
+
                 // Add the number of occurrences to the total number of occurrences
                 termEntry.TotalTermCount += term.Value;
             }
@@ -162,7 +194,7 @@ public class SearchEngine
 
         // TODO: Maybe change the list of terms into a dictionary
         // Create the index object
-        var index = new IndexData() { Files = filesList, Terms = termsList.Select(x=>x.Value).ToList() };
+        var index = new IndexData() { Files = filesList, Terms = termsList.Select(x => x.Value).ToList() };
 
         // TODO: delete testing code
         var serializedIndex = JsonSerializer.Serialize(index);
