@@ -1,31 +1,37 @@
 ﻿using seareng.Core;
-using System.Net.Mime;
-using System.Text.Json;
+using System.Buffers;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 var app = builder.Build();
 
+var folderPath = "C:\\Users\\nnnn\\Desktop\\aspnetcore\\src\\";
+
+
 app.MapGet("/index", async () =>
 {
-    return "indexing...";
-
     var se = new SearchEngine();
-    var folderPath = "C:\\Users\\nnnn\\Desktop\\aspnetcore\\src\\";
     await se.IndexFolder(folderPath);
 
+    return "finished indexing";
 });
 
-app.MapGet("/search", () =>
+app.MapPost("/search", async (context) =>
 {
+    var result = await context.Request.BodyReader.ReadAsync();
+    var str = Encoding.UTF8.GetString(result.Buffer.ToArray());
+
     var se = new SearchEngine();
-    var result = se.SearchQuery("hello world");
-    return result.Select(x => new { x.filePath, x.weight });
+    var files = se.SearchQuery(str);
+    await context.Response.WriteAsJsonAsync(
+        files.Select(x => new { File = x.filePath.Substring(folderPath.Length), Weight = x.weight }));
 });
 
+app.MapGet("/", () => Results.Redirect("/index.html", permanent: true));
 
-app.MapGet("/", () =>   Results.Redirect("/index.html", permanent:true));
+
 
 app.UseStaticFiles();
 

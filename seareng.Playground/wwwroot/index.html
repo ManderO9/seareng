@@ -1,19 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>seareng</title>
 </head>
+
 <body>
-    <form method="GET" action="/search">
+    <label>
+        query:
+        <input type="text" name="query" />
+    </label>
 
-        <label>
-            query: 
-            <input type="text" name="query"/>
-        </label>
+    <button id="query-button">Send</button>
 
-        <button>Send</button>
-    </form>
+    <p class="file-list">
+
+    </p>
+
+    <script>
+        const button = document.querySelector("#query-button");
+        const fileList = document.querySelector(".file-list");
+
+        button.addEventListener("click", async () => {
+            var query = document.querySelector("input[name=query]").value;
+
+            var response = await fetch("/search", { body: query, method: "POST" });
+            var files = await response.json();
+            fileList.innerHTML = "";
+            files.forEach(file => {
+                fileList.innerHTML += '<a href="/file?path='+file.file +'">'+file.file +'</a></br>';
+            });
+
+        });
+    </script>
+
 </body>
+
 </html>
