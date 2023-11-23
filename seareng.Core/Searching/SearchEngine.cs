@@ -5,7 +5,7 @@ namespace seareng.Core;
 
 public class SearchEngine
 {
-    public List<string> SearchQuery(string query)
+    public List<(string filePath, double weight)> SearchQuery(string query)
     {
         // TODO: move this somewhere else
         // Read the index file
@@ -49,11 +49,11 @@ public class SearchEngine
 
         // Order the files by their weight
         var result = filesResult.Select(x =>
-            new { path = index.Files.First(y => y.FileId == x.Key).Path, weight = x.Value })
-            .OrderByDescending(x => x.weight);
+             (index.Files.First(y => y.FileId == x.Key).Path,x.Value))
+            .OrderByDescending(x => x.Value);
 
         // Return the result
-        return result.Select(x => x.path).ToList();
+        return result.ToList();
     }
 
     /*    
