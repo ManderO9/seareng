@@ -31,7 +31,19 @@ app.MapPost("/search", async (context) =>
 
 app.MapGet("/", () => Results.Redirect("/index.html", permanent: true));
 
+app.MapGet("/file", async (context) =>
+{
+    var filePath = context.Request.Query["path"].FirstOrDefault();
 
+    if(filePath is null)
+    {
+        await context.Response.WriteAsync("No file path has been provided");
+        return;
+    }
+
+    var fileContent = File.ReadAllText(Path.Combine(folderPath, filePath));
+    await context.Response.WriteAsync(fileContent);
+});
 
 app.UseStaticFiles();
 

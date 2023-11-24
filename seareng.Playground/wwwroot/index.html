@@ -5,6 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>seareng</title>
+    <style>
+        body{
+            background-color: rgb(30, 30, 30);
+            color:aliceblue;
+        }
+        .file-name {
+            color: cornflowerblue;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
@@ -18,10 +28,24 @@
     <p class="file-list">
 
     </p>
+    
+<pre>
+<code class="file-content" lang="javascript">
+</code>
+</pre>
 
     <script>
         const button = document.querySelector("#query-button");
         const fileList = document.querySelector(".file-list");
+        const fileContent = document.querySelector(".file-content");
+
+        async function DisplayContent(filePath) {
+            var requestPath = "/file?path=" + filePath;
+            var response = await fetch(requestPath);
+            var body = await response.text();
+
+            fileContent.textContent = body;
+        }
 
         button.addEventListener("click", async () => {
             var query = document.querySelector("input[name=query]").value;
@@ -30,7 +54,12 @@
             var files = await response.json();
             fileList.innerHTML = "";
             files.forEach(file => {
-                fileList.innerHTML += '<a href="/file?path='+file.file +'">'+file.file +'</a></br>';
+                var fileItem = document.createElement("span");
+                fileItem.setAttribute("class", "file-name")
+                fileItem.innerText = file.file;
+                fileItem.addEventListener("click", () => DisplayContent(file.file));
+                fileList.appendChild(fileItem);
+                fileList.appendChild(document.createElement("br"));
             });
 
         });
